@@ -1,169 +1,3 @@
-let crc_fin;
-let enviando = false;
-const limpiarCerosIzquierda = arrayLimpiar => {
-
-    for(let i = 0; i < arrayLimpiar.length; i++) {
-
-        if(arrayLimpiar[i] === '1'){
-            break;
-        } else {
-            arrayLimpiar[i] = '';
-        }
-    }
-    return arrayLimpiar.join('').split('');
-}
-
-const verificarReceptor = (TX, G_VERIFICAR) => {
-    
-    let numerador = TX.split('');
-
-    const denominador = G_VERIFICAR.split('');
-    let sinTerminar = true;
-    let result_receptor = new Array();
-    result_receptor.push(1);
-
-    let numeradorRestaReceptor = numerador.join('').substring(0,denominador.length).split('');
-    numerador.join('').substring(0, denominador.length).split('');
-    console.log(numerador);
-    for(let i = 0; i < denominador.length; i++) {
-        numerador[i] = '';
-    }
-    numerador = numerador.join('').split('');
-    console.log(numerador);
-    
-    while(sinTerminar) {
-        // console.log(numeradorRestaReceptor);
-        for(let i = 0; i < denominador.length; i++) {
-
-            if(numeradorRestaReceptor[i] === denominador[i]){
-                numeradorRestaReceptor[i] = '0';
-            } else {
-                numeradorRestaReceptor[i] = '1';
-            }
-
-        }
-
-
-    //     numerador = numerador.join('').split('');
-        let arrayClean = limpiarCerosIzquierda(numeradorRestaReceptor);
-        numeradorRestaReceptor = arrayClean;
-        if(numerador.length === 0){
-            sinTerminar = false;
-            break;
-        } else {
-            if(numeradorRestaReceptor.length < denominador.length){
-                numeradorRestaReceptor.push(numerador[0]);
-                numerador[0] = '';
-                numerador = numerador.join('').split('');
-
-                while(numeradorRestaReceptor.length < denominador.length){
-                    numeradorRestaReceptor.push(numerador[0]); 
-                    numerador[0] = '';
-                    numerador = numerador.join('').split('');
-                    // result.push(0);
-                }
-
-            }
-            
-
-
-
-    //     }
-
-        if(numeradorRestaReceptor[numeradorRestaReceptor.length - 1] !== undefined) {
-            // result.push(1);
-        }
-    //     console.log(numeradorResta);
-    //     crc_fin = numeradorResta.join('');
-    // }
-    // console.log(crc_fin);
-
-    // if(result.join('') === '1011'){
-    //     console.log('Siiiiii! Hijueputa!!!!!');
-    }
-    // console.log(result);
-    console.log(numeradorRestaReceptor);
-    crc_fin = numeradorRestaReceptor.join('');
-}
-}
-
-
-const calcularCrc = (g, d, r) => {
-    let numerador = armarNumerador(d, r).split('');
-    const denominador = g.split('');
-    let sinTerminar = true;
-    let result = new Array();
-    result.push(1);
-
-    let numeradorResta = numerador.join('').substring(0, denominador.length).split('');
-
-    for(let i = 0; i < denominador.length; i++) {
-        numerador[i] = '';
-    }
-
-    numerador = numerador.join('').split('');
-    while(sinTerminar) {
-
-        for(let i = 0; i < denominador.length; i++) {
-
-            if(numeradorResta[i] === denominador[i]){
-                numeradorResta[i] = '0';
-            } else {
-                numeradorResta[i] = '1';
-            }
-
-        }
-
-
-        numerador = numerador.join('').split('');
-        console.log(numeradorResta);
-        let arrayClean = limpiarCerosIzquierda(numeradorResta);
-        numeradorResta = arrayClean;
-        if(numerador.length === 0){
-            sinTerminar = false;
-            break;
-        } else {
-
-            numeradorResta.push(numerador[0]);
-            numerador[0] = '';
-            numerador = numerador.join('').split('');
-            
-            while(numeradorResta.length < denominador.length){
-                numeradorResta.push(numerador[0]); 
-                numerador[0] = '';
-                numerador = numerador.join('').split('');
-                result.push(0);
-            }
-
-
-        }
-
-        if(numeradorResta[numeradorResta.length - 1] !== undefined) {
-            result.push(1);
-        }
-
-        crc_fin = numeradorResta.join('');
-
-    }
-
-    if(result.join('') === '1011'){
-        console.log('Siiiiii! Hijueputa!!!!!');
-    }
-    console.log(result);
-    console.log(' ');   
-}
-
-
-
-
-const armarNumerador = (primero, segundo) => { 
-    let concatenar = new Array();
-    for(let i = 0; i < segundo; i++) {
-        concatenar[i] =  '0';
-    }
-    return primero + concatenar.join('');
-}
-
 const btn_calcular = document.getElementById('btn_calcular');
 const brn_validar = document.getElementById('enviar_validar');
 const CRC = document.getElementById('CRC_input');
@@ -173,50 +7,116 @@ const R = document.getElementById('R_input');
 const TX_input = document.getElementById('TX_input');
 const CRC_label = document.getElementById('laber_crc');
 const TX_label = document.getElementById('TX_label');
+const mensaje_validacion = document.getElementById('mensaje_validacion');
+const receptor_crc = document.getElementById('receptor_crc');
+const receptor_crc_popup = document.getElementById('receptor_crc_popup');
+const receptor_TX = document.getElementById('receptor_TX');
+const receptor_crc_label = document.getElementById('receptor_label_crc');
+const receptor_label_crc_popup = document.getElementById('receptor_label_crc_popup');
+const receptor_TX_label = document.getElementById('receptor_label_TX');
+const section_msn = document.getElementById('section_msn');
+const generado_activar = document.getElementById('generado_activar');
+
 CRC_label.classList.add('active');
 TX_label.classList.add('active');
 
 btn_calcular.addEventListener('click', () => {
 
-    enviando = false;
-    calcularCrc(G.value, D.value, G.value.split('').length);
-
     CRC_label.classList.add('active');
     TX_label.classList.add('active');
+    const crcFetch = resultCrc(D.value, G.value);
 
-    CRC.value = crc_fin;
 
-    TX_input.value = D.value + crc_fin;
+
+    if(crcFetch.code === 'OK') {
+        CRC.value = crcFetch.dataRes.crc;
+        TX_input.value = crcFetch.dataRes.d + crcFetch.dataRes.crc;
+        generado_activar.classList.add('active');
+    }
+
+
+
 });
-
-const mensaje_validacion = document.getElementById('mensaje_validacion');
-const receptor_crc = document.getElementById('receptor_crc');
-const receptor_TX = document.getElementById('receptor_TX');
-const receptor_crc_label = document.getElementById('receptor_label_crc');
-const receptor_TX_label = document.getElementById('receptor_label_TX');
 
 brn_validar.addEventListener('click', () => {
 
-    verificarReceptor(TX_input.value, G.value);
-    let verificar = crc_fin.split('');
-    mensaje_validacion.innerHTML = 'Mensaje recibido, el mensaje está correcto';
-    for(let verifica of verificar){
-        if(!(verifica == '0' || verifica == undefined)){
-            mensaje_validacion.innerHTML = 'Mensaje recibido, el mensaje está errado';
+    const crcReceptor = resultReception(TX_input.value, G.value);
+
+    receptor_crc_label.classList.add('active');
+    receptor_crc.value = crcReceptor.dataRes.resultCRC;
+
+    receptor_label_crc_popup.classList.add('active');
+    receptor_crc_popup.value = crcReceptor.dataRes.resultCRC;
+
+    let validado = true;
+
+
+    for(let crc of receptor_crc.value) {
+        if(crc !== '0') {
+            validado = false;
         }
     }
-    receptor_crc_label.classList.add('active');
-    receptor_TX_label.classList.add('active');
 
-    receptor_crc.value = crc_fin;
-    receptor_TX.value = TX_input.value;
+    section_msn.classList.add('active');
+	// popup.classList.add('active');
 
+    mensaje_validacion.innerHTML = 'Mensaje correcto';
+
+    if(!validado) {
+        mensaje_validacion.innerHTML = 'Mensaje incorrecto';
+    }
+
+    console.log(crcReceptor.dataRes.resultCRC);
 });
 
 
-// D.value = '10011110001';
-// G.value = '10011';
-// R.value = '4';
+const resultCrc = (d_fetch, g_fetch) => {
+    let result;
+    let settings = {
+        "url": "http://localhost:8080/calcularCRC",
+        "method": "POST",
+        "async": false,
+        "timeout": 0,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({
+          "d": d_fetch,
+          "g": g_fetch
+        }),
+    };
+    
+    $.ajax(settings).done(function (response) {
+        result = response;
+    });
+    
+    return result;
+}
+
+const resultReception = (tx_recep, g_recep) => {
+    let result;
+    let settings = {
+        "url": "http://localhost:8080/calcularReceptor",
+        "method": "POST",
+        "async": false,
+        "timeout": 0,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({
+          "tx": tx_recep,
+          "g": g_recep
+        }),
+      };
+      
+      $.ajax(settings).done(function (response) {
+        // console.log(response);
+        result = response;
+      });
+
+      return result;
+}
+
 
 
 
