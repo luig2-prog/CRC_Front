@@ -16,17 +16,25 @@ const receptor_label_crc_popup = document.getElementById('receptor_label_crc_pop
 const receptor_TX_label = document.getElementById('receptor_label_TX');
 const section_msn = document.getElementById('section_msn');
 const generado_activar = document.getElementById('generado_activar');
+const numerador_div = document.getElementById('numerador_div');
+const denominador_div = document.getElementById('denominador_div');
 
 CRC_label.classList.add('active');
 TX_label.classList.add('active');
+
+D.value = '10011110001';
+G.value = '10011';
 
 btn_calcular.addEventListener('click', () => {
 
     CRC_label.classList.add('active');
     TX_label.classList.add('active');
     const crcFetch = resultCrc(D.value, G.value);
+    console.log(crcFetch.dataRes.residuos.length);
 
+    console.log(crcFetch.dataRes.g.length);
 
+   
 
     if(crcFetch.code === 'OK') {
         CRC.value = crcFetch.dataRes.crc;
@@ -34,8 +42,52 @@ btn_calcular.addEventListener('click', () => {
         generado_activar.classList.add('active');
     }
 
+    let numerador = crcFetch.dataRes.d + crcFetch.dataRes.r;
+    numerador_div.innerHTML = numerador;
+
+    denominador_div.innerHTML = crcFetch.dataRes.g;
+
+    let numeradores = crcFetch.dataRes.residuos;
+
+    console.log(numeradores)
 
 
+
+  overlay.classList.add('active');
+	popup.classList.add('active');
+  let newDiv = document.createElement("div");
+  let newDiv2 = document.createElement("div");
+  let newContent = document.createTextNode("Hola!¿Qué tal?");
+  let newContent2 = document.createTextNode("Hola!¿Qué tal?2");
+  newDiv.appendChild(newContent); 
+  newDiv2.appendChild(newContent2); 
+
+  let variable = new Array();
+  const prueba = numeradores;
+  let cont = 0;
+  let num = '';
+  for(let numero of numeradores) {
+    
+    num = num + numero; 
+
+    if(cont ===  5){
+      variable.push(num)
+      cont = 0;
+      num = '';
+    }
+
+  }
+
+  console.log(variable);
+
+  let add = document.getElementById('container_operation');
+  add.appendChild(newDiv);
+  add.appendChild(newDiv2);
+
+
+
+
+    
 });
 
 brn_validar.addEventListener('click', () => {
@@ -45,8 +97,8 @@ brn_validar.addEventListener('click', () => {
     receptor_crc_label.classList.add('active');
     receptor_crc.value = crcReceptor.dataRes.resultCRC;
 
-    receptor_label_crc_popup.classList.add('active');
-    receptor_crc_popup.value = crcReceptor.dataRes.resultCRC;
+    // receptor_label_crc_popup.classList.add('active');
+    // receptor_crc_popup.value = crcReceptor.dataRes.resultCRC;
 
     let validado = true;
 
@@ -58,7 +110,6 @@ brn_validar.addEventListener('click', () => {
     }
 
     section_msn.classList.add('active');
-	// popup.classList.add('active');
 
     mensaje_validacion.innerHTML = 'Mensaje correcto';
 

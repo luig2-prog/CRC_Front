@@ -41,3 +41,13 @@
 .separador_padding {
     padding: 20px 10px 0px 10px !important;
 }
+
+.grid {
+   
+    display: inline-block;
+}
+
+.denom {
+    border-bottom: 5px groove rgba(28,110,164,0.93);
+    border-left: 5px groove rgba(28,110,164,0.93);
+}

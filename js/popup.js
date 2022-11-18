@@ -18,9 +18,9 @@ btnCerrarPopup.addEventListener('click', function(e){
 });
 
 // btn_calcular.addEventListener('click', function(e){
-// 	// e.preventDefault();
-// 	// overlay.classList.add('active');
-// 	// popup.classList.add('active');
+// 	e.preventDefault();
+// 	overlay.classList.add('active');
+// 	popup.classList.add('active');
 // });
 	
 
